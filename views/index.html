@@ -1,0 +1,46 @@
+<html ng-app="mainapp">
+<head>
+<link rel="stylesheet" href="public/css/css/bootstrap.min.css">
+<script type="text/javascript" src="public/js/angular.min.js"></script>
+<script>
+var app = angular.module("mainapp",[]);
+app.controller("appctrl",function($scope,$http){
+	$scope.save = function(){
+		var nama = $scope.nama;
+		var jeniskelamin = $scope.jeniskelamin;
+		var nomortelpon = $scope.nomortelpon;
+		var alamat = $scope.alamat;
+		$http.post("simpan_data",{nama:nama,jeniskelamin:jeniskelamin,nomortelpon:nomortelpon,alamat:alamat}).success(function(){
+			alert("data sukses di simpan");
+		})
+	}
+})
+</script>
+</head>
+<body>
+	<div class="container" ng-controller="appctrl">
+		<div class="col-md-4">
+			<div class="form-group">
+			<label>Nama</label>
+			<input type="text" class="form-control" ng-model="nama">
+			</div>
+			<div class="form-group">
+			<label>Jenis Kelamin</label>
+			<select type="text" class="form-control" ng-model="jeniskelamin">
+			<option value="laki-laki">Laki-Laki</option>
+			<option value="perempuan">Perempuan</option>
+			</select>
+			</div>
+			<div class="form-group">
+			<label>Nomor Telpon</label>
+			<input type="text" class="form-control" ng-model="nomortelpon">
+			</div>
+			<div class="form-group">
+			<label>Alamat</label>
+			<textarea class="form-control" ng-model="alamat"></textarea>
+			</div>
+			<button class="btn btn-primary" ng-click="save()">Save</button>
+		</div>
+	</div>
+</body>
+</html>
