@@ -5,6 +5,18 @@
 <script>
 var app = angular.module("mainapp",[]);
 app.controller("appctrl",function($scope,$http){
+	$scope.bukutamu = [];
+	$scope.inijson = {};
+	$scope.inijson.var1 = "jomblo";
+	$scope.inijson['var2'] = "jones";
+
+	$scope.getdata = function(){
+		$http.get("ambil_bukutamu").success(function(data){
+			$scope.bukutamu = data;
+			console.log($scope.bukutamu)
+		})
+	}
+	$scope.getdata();
 	$scope.save = function(){
 		var nama = $scope.nama;
 		var jeniskelamin = $scope.jeniskelamin;
@@ -12,13 +24,42 @@ app.controller("appctrl",function($scope,$http){
 		var alamat = $scope.alamat;
 		$http.post("simpan_data",{nama:nama,jeniskelamin:jeniskelamin,nomortelpon:nomortelpon,alamat:alamat}).success(function(){
 			alert("data sukses di simpan");
+			$scope.getdata()
+		})
+	}
+	$scope.edit = function(item){
+		$scope.nama = item.nama;
+		$scope.jeniskelamin = item.jeniskelamin;
+		$scope.nomortelpon = item.nomortelpon;
+		$scope.alamat = item.alamat;
+		$scope.id = item._id;
+
+	1}
+	$scope.actionedit = function(){
+		var nama = $scope.nama;
+		var jeniskelamin = $scope.jeniskelamin;
+		var nomortelpon = $scope.nomortelpon;
+		var alamat = $scope.alamat;
+		var id = $scope.id
+		$http.post("ubah_data",{id:id,nama:nama,jeniskelamin:jeniskelamin,nomortelpon:nomortelpon,alamat:alamat}).success(function(){
+			alert("data sukses di simpan");
+			$scope.getdata()
+		})
+	}
+	$scope.hapus = function(item){
+		$scope.id = item._id;
+		var id = $scope.id;
+		console.log(id);
+		$http.post("hapus_data",{id:id}).success(function(){
+			alert("data sukses di hapus");
+			$scope.getdata();
 		})
 	}
 })
 </script>
 </head>
-<body>
-	<div class="container" ng-controller="appctrl">
+<body   ng-controller="appctrl">
+	<div class="container" >
 		<div class="col-md-4">
 			<div class="form-group">
 			<label>Nama</label>
@@ -40,7 +81,28 @@ app.controller("appctrl",function($scope,$http){
 			<textarea class="form-control" ng-model="alamat"></textarea>
 			</div>
 			<button class="btn btn-primary" ng-click="save()">Save</button>
+			<button class="btn btn-success" ng-click="actionedit()">Ubah</button>
 		</div>
 	</div>
+	{{inijson.var2}}
+	<table class="table table-stripped">
+	<thead>
+	<th>Nama </th>
+	<th>Nomor Telpon</th>
+	<th> Jenis Kelamin </th>
+	<th>Alamat</th>
+	<th>Action</th>
+	</thead>
+	<tbody>
+	<tr ng-repeat="item in bukutamu">
+	<td>{{item.nama}}</td>
+	<td>{{item.nomortelpon}}</td>
+	<td>{{item.jeniskelamin}}</td>
+	<td>{{item.alamat}}</td>
+	<td><button class="btn btn-success" ng-click="edit(item)">Edit</button></td>
+	<td><button class="btn btn-danger" ng-click="hapus(item)">Hapus</button></td>
+	</tr>
+	</tbody>
+	</table>
 </body>
 </html>
